@@ -2,7 +2,7 @@ class Board {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        table = this.createDimensions();
+        this.table = new Array();
         
     }
     createDimensions() {
@@ -16,7 +16,8 @@ class Board {
             array1.push(array2);
             array2 = [];
         }
-        return array1
+        this.table = array1
+        return this.table
     }
 
     findCells(){
@@ -25,28 +26,39 @@ class Board {
         for (let i = 0; i < this.y; i++) {
             for (let j = 0; j < this.x; j++) {
             
-                if(table[i][j] == 1){
-                    let neighbours = findNeighbours(i,j,table)
+                if(this.table[i][j] == 1){
+                    let neighbours = findNeighbours(i,j,this.table)
                     if(neighbours > 3 || neighbours < 2){
                         cellsToKill.push([i,j])
                     }
                 }
                 else{
-                    if(findNeighbours(i,j,table)== 3){
+                    if(findNeighbours(i,j,this.table)== 3){
                         cellsToRevive.push([i,j])
                     }
                 }
             }
         }
-        return{cellsToKill,cellsToRevive}
+        return {cellsToKill,cellsToRevive}
+    }
+
+    nextGen(){
+        let found = this.findCells();
+
+        found.cellsToKill.forEach(cell => {
+            const [x, y] = cell 
+            this.this.table[x][y] = 0
+        })
+
+        found.cellsToRevive.forEach(cell => {
+            const [x, y] = cell
+            this.this.table[x][y] = 1
+        })
     }
 }
 
 class Cell{
-    constructor(x,y) {
-        this.x = x
-        this.y = y
-    }
+    
     findNeighbours(x,y,board){
         let cont = 0
         for (let i = x-1; i <= x+1; i++) {
@@ -67,6 +79,9 @@ class Cell{
     }
 }
 
-let firstGen = new Board(4, 8)
-console.table(firstGen.createDimensions())
+let firstGen = new Board(4, 8);
+
+console.table(firstGen.table);
+
+
 
